@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>موب قليوب - بيع وشراء موبايلات مستعملة</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- خلفية متحركة -->
+<div class="bg-animation">
+  <div class="floating-phones" id="floatingPhones"></div>
+  <div class="gradient-overlay"></div>
+</div>
+
+<!-- هيدر -->
+<header class="header" id="header">
+  <div class="container">
+    <div class="logo">
+      <span class="logo-icon">📱</span>
+      <span class="logo-text">موب <span class="accent">قليوب</span></span>
+    </div>
+    <nav class="nav">
+      <a href="#listings" class="nav-link">الإعلانات</a>
+      <a href="#" class="nav-link" id="openLoginBtn">دخول</a>
+      <a href="#" class="btn-primary" id="openRegisterBtn">سجل دلوقتي</a>
+    </nav>
+  </div>
+</header>
+
+<!-- هيرو سكشن -->
+<section class="hero" id="home">
+  <div class="hero-content">
+    <h1 class="hero-title">
+      بيع وشراء موبايلات<br>
+      <span class="accent">في قليوبية</span>
+    </h1>
+    <p class="hero-subtitle">أكبر سوق موبايلات مستعملة في القليوبية - بيع بسهولة واشتري بأمان</p>
+    <div class="hero-btns">
+      <a href="#" class="btn-primary large" id="addListingBtn">+ نزّل إعلانك</a>
+      <a href="#listings" class="btn-outline large">شوف الإعلانات</a>
+    </div>
+    <div class="hero-stats">
+      <div class="stat"><span class="stat-num" id="totalAds">0</span><span>إعلان نشط</span></div>
+      <div class="stat"><span class="stat-num" id="totalUsers">0</span><span>مستخدم</span></div>
+      <div class="stat"><span class="stat-num">100%</span><span>آمن</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- فلتر وبحث -->
+<section class="search-section" id="listings">
+  <div class="container">
+    <div class="search-bar">
+      <input type="text" placeholder="ابحث عن موبايل..." id="searchInput" class="search-input">
+      <select id="brandFilter" class="filter-select">
+        <option value="">كل الماركات</option>
+        <option value="samsung">Samsung</option>
+        <option value="iphone">iPhone</option>
+        <option value="xiaomi">Xiaomi</option>
+        <option value="oppo">Oppo</option>
+        <option value="vivo">Vivo</option>
+        <option value="huawei">Huawei</option>
+        <option value="tecno">Tecno</option>
+        <option value="other">أخرى</option>
+      </select>
+      <select id="priceFilter" class="filter-select">
+        <option value="">كل الأسعار</option>
+        <option value="0-1000">أقل من 1000ج</option>
+        <option value="1000-3000">1000 - 3000ج</option>
+        <option value="3000-6000">3000 - 6000ج</option>
+        <option value="6000-999999">أكتر من 6000ج</option>
+      </select>
+      <select id="conditionFilter" class="filter-select">
+        <option value="">كل الحالات</option>
+        <option value="ممتاز">ممتاز</option>
+        <option value="كويس">كويس</option>
+        <option value="مقبول">مقبول</option>
+      </select>
+    </div>
+  </div>
+</section>
+
+<!-- الإعلانات -->
+<section class="listings-section">
+  <div class="container">
+    <h2 class="section-title">أحدث الإعلانات</h2>
+    <div class="listings-grid" id="listingsGrid">
+      <div class="loading-spinner">
+        <div class="spinner"></div>
+        <p>جاري التحميل...</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- فوتر -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-content">
+      <div class="footer-logo">
+        <span class="logo-icon">📱</span>
+        <span class="logo-text">موب <span class="accent">قليوب</span></span>
+      </div>
+      <p class="footer-text">أكبر سوق موبايلات مستعملة في القليوبية</p>
+      <p class="footer-copy">© 2024 موب قليوب - جميع الحقوق محفوظة</p>
+    </div>
+  </div>
+</footer>
+
+<!-- مودال تسجيل دخول -->
+<div class="modal" id="loginModal">
+  <div class="modal-overlay" onclick="closeModal('loginModal')"></div>
+  <div class="modal-content">
+    <button class="modal-close" onclick="closeModal('loginModal')">✕</button>
+    <h2 class="modal-title">تسجيل الدخول</h2>
+    <div class="form-group">
+      <label>الإيميل</label>
+      <input type="email" id="loginEmail" placeholder="example@gmail.com" class="form-input">
+    </div>
+    <div class="form-group">
+      <label>كلمة السر</label>
+      <input type="password" id="loginPassword" placeholder="••••••••" class="form-input">
+    </div>
+    <button class="btn-primary full" onclick="loginUser()">دخول</button>
+    <p class="modal-switch">مش عندك حساب؟ <a href="#" onclick="switchModal('loginModal','registerModal')">سجل دلوقتي</a></p>
+    <div class="error-msg" id="loginError"></div>
+  </div>
+</div>
+
+<!-- مودال تسجيل -->
+<div class="modal" id="registerModal">
+  <div class="modal-overlay" onclick="closeModal('registerModal')"></div>
+  <div class="modal-content">
+    <button class="modal-close" onclick="closeModal('registerModal')">✕</button>
+    <h2 class="modal-title">إنشاء حساب جديد</h2>
+    <div class="form-group">
+      <label>اسم المستخدم</label>
+      <input type="text" id="regUsername" placeholder="اسمك هنا" class="form-input">
+    </div>
+    <div class="form-group">
+      <label>الإيميل</label>
+      <input type="email" id="regEmail" placeholder="example@gmail.com" class="form-input">
+    </div>
+    <div class="form-group">
+      <label>كلمة السر</label>
+      <input type="password" id="regPassword" placeholder="••••••••" class="form-input">
+    </div>
+    <button class="btn-primary full" onclick="registerUser()">إنشاء حساب</button>
+    <p class="modal-switch">عندك حساب؟ <a href="#" onclick="switchModal('registerModal','loginModal')">سجل دخول</a></p>
+    <div class="error-msg" id="registerError"></div>
+  </div>
+</div>
+
+<!-- مودال إضافة إعلان -->
+<div class="modal" id="addListingModal">
+  <div class="modal-overlay" onclick="closeModal('addListingModal')"></div>
+  <div class="modal-content large-modal">
+    <button class="modal-close" onclick="closeModal('addListingModal')">✕</button>
+    <h2 class="modal-title">نزّل إعلانك</h2>
+    <div class="form-group">
+      <label>اسم الموبايل والموديل</label>
+      <input type="text" id="phoneName" placeholder="مثال: Samsung Galaxy A54" class="form-input">
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>الماركة</label>
+        <select id="phoneBrand" class="form-input">
+          <option value="">اختر الماركة</option>
+          <option value="samsung">Samsung</option>
+          <option value="iphone">iPhone</option>
+          <option value="xiaomi">Xiaomi</option>
+          <option value="oppo">Oppo</option>
+          <option value="vivo">Vivo</option>
+          <option value="huawei">Huawei</option>
+          <option value="tecno">Tecno</option>
+          <option value="other">أخرى</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>الحالة</label>
+        <select id="phoneCondition" class="form-input">
+          <option value="ممتاز">ممتاز</option>
+          <option value="كويس">كويس</option>
+          <option value="مقبول">مقبول</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>السعر (جنيه)</label>
+        <input type="number" id="phonePrice" placeholder="مثال: 3500" class="form-input">
+      </div>
+      <div class="form-group">
+        <label>المنطقة في القليوبية</label>
+        <select id="phoneArea" class="form-input">
+          <option value="">اختر المنطقة</option>
+          <option value="بنها">بنها</option>
+          <option value="قليوب">قليوب</option>
+          <option value="شبرا الخيمة">شبرا الخيمة</option>
+          <option value="طوخ">طوخ</option>
+          <option value="كفر شكر">كفر شكر</option>
+          <option value="توكه">توكه</option>
+          <option value="أبو زعبل">أبو زعبل</option>
+          <option value="الخانكة">الخانكة</option>
+          <option value="أخرى">أخرى</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-group">
+      <label>وصف الموبايل <span class="hint">(100 حرف كحد أقصى - ممنوع كتابة أرقام تليفون)</span></label>
+      <textarea id="phoneDesc" placeholder="مثال: حالة ممتازة بالكرتونة والشاحن..." class="form-input textarea" maxlength="100"></textarea>
+      <span class="char-count" id="charCount">0/100</span>
+    </div>
+    <div class="form-group">
+      <label>صور الموبايل <span class="hint">(أقصى 5 صور)</span></label>
+      <div class="image-upload-area" id="imageUploadArea">
+        <input type="file" id="phoneImages" accept="image/jpeg,image/png,image/webp" multiple class="file-input">
+        <div class="upload-placeholder" onclick="document.getElementById('phoneImages').click()">
+          <span class="upload-icon">📷</span>
+          <p>اضغط لاختيار صور</p>
+          <p class="hint">JPG, PNG, WEBP - أقصى 5 صور</p>
+        </div>
+        <div class="image-previews" id="imagePreviews"></div>
+      </div>
+    </div>
+    <div class="payment-info">
+      <div class="payment-icon">💰</div>
+      <div>
+        <p class="payment-title">رسوم النشر: 10 جنيه</p>
+        <p class="payment-desc">بعد الضغط على "نزّل الإعلان"، ابعت 10ج على فودافون كاش: <strong>01025256462</strong> وابعت صورة الإيصال على واتساب: <strong>01125472449</strong></p>
+      </div>
+    </div>
+    <button class="btn-primary full" onclick="submitListing()">نزّل الإعلان 🚀</button>
+    <div class="error-msg" id="listingError"></div>
+  </div>
+</div>
+
+<!-- مودال عرض الرقم -->
+<div class="modal" id="showPhoneModal">
+  <div class="modal-overlay" onclick="closeModal('showPhoneModal')"></div>
+  <div class="modal-content">
+    <button class="modal-close" onclick="closeModal('showPhoneModal')">✕</button>
+    <div class="phone-reveal-content">
+      <div class="phone-reveal-icon">📞</div>
+      <h2 class="modal-title">شوف رقم البايع</h2>
+      <p class="phone-reveal-desc">لمشاهدة رقم البايع، ابعت <strong>10 جنيه</strong> على فودافون كاش:</p>
+      <div class="vodafone-number">01025256462</div>
+      <p class="phone-reveal-desc">بعدين ابعت صورة الإيصال على واتساب:</p>
+      <a href="https://wa.me/201125472449" target="_blank" class="btn-whatsapp">
+        <span>💬</span> ابعت الإيصال على واتساب
+      </a>
+      <p class="hint center">بعد التحقق من الدفع، هيتبعتلك رقم البايع على واتساب خلال دقائق</p>
+    </div>
+  </div>
+</div>
+
+<!-- مودال عرض الإعلان -->
+<div class="modal" id="viewListingModal">
+  <div class="modal-overlay" onclick="closeModal('viewListingModal')"></div>
+  <div class="modal-content large-modal" id="viewListingContent">
+  </div>
+</div>
+
+<!-- نوتيفيكيشن -->
+<div class="notification" id="notification"></div>
+
+<!-- Firebase -->
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, updateProfile } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+import { getFirestore, collection, addDoc, getDocs, query, orderBy, where, doc, updateDoc, getDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyCrKts7fDedMnzbPzVyFotwHcDwXledXR4",
+  authDomain: "mobqalyub.firebaseapp.com",
+  projectId: "mobqalyub",
+  storageBucket: "mobqalyub.firebasestorage.app",
+  messagingSenderId: "262843778455",
+  appId: "1:262843778455:web:9c011310846d78eb78b0d2"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+
+// Cloudinary config
+const CLOUDINARY_CLOUD = "dv9k3xgof";
+const CLOUDINARY_UPLOAD_PRESET = "mobqalyub_unsigned";
+
+// State
+let currentUser = null;
+let allListings = [];
+let selectedImages = [];
+
+// Auth state
+onAuthStateChanged(auth, (user) => {
+  currentUser = user;
+  updateNavUI(user);
+});
+
+function updateNavUI(user) {
+  const loginBtn = document.getElementById('openLoginBtn');
+  const regBtn = document.getElementById('openRegisterBtn');
+  if (user) {
+    loginBtn.textContent = user.displayName || 'حسابي';
+    loginBtn.onclick = () => logoutUser();
+    regBtn.textContent = 'خروج';
+    regBtn.onclick = () => logoutUser();
+  } else {
+    loginBtn.textContent = 'دخول';
+    loginBtn.onclick = () => openModal('loginModal');
+    regBtn.textContent = 'سجل دلوقتي';
+    regBtn.onclick = () => openModal('registerModal');
+  }
+}
+
+// Register
+window.registerUser = async function() {
+  const username = document.getElementById('regUsername').value.trim();
+  const email = document.getElementById('regEmail').value.trim();
+  const password = document.getElementById('regPassword').value;
+  const errEl = document.getElementById('registerError');
+  errEl.textContent = '';
+
+  if (!username || !email || !password) {
+    errEl.textContent = 'من فضلك املأ كل الحقول';
+    return;
+  }
+  if (password.length < 6) {
+    errEl.textContent = 'كلمة السر لازم تكون 6 حروف على الأقل';
+    return;
+  }
+
+  try {
+    const cred = await createUserWithEmailAndPassword(auth, email, password);
+    await updateProfile(cred.user, { displayName: username });
+    await addDoc(collection(db, 'users'), {
+      uid: cred.user.uid,
+      username,
+      email,
+      createdAt: serverTimestamp()
+    });
+    closeModal('registerModal');
+    showNotification('✅ تم إنشاء حسابك بنجاح!', 'success');
+    updateStats();
+  } catch (e) {
+    if (e.code === 'auth/email-already-in-use') errEl.textContent = 'الإيميل ده مسجل قبل كده';
+    else errEl.textContent = 'حصل خطأ، حاول تاني';
+  }
+};
+
+// Login
+window.loginUser = async function() {
+  const email = document.getElementById('loginEmail').value.trim();
+  const password = document.getElementById('loginPassword').value;
+  const errEl = document.getElementById('loginError');
+  errEl.textContent = '';
+
+  try {
+    await signInWithEmailAndPassword(auth, email, password);
+    closeModal('loginModal');
+    showNotification('✅ أهلاً بيك!', 'success');
+  } catch (e) {
+    errEl.textContent = 'الإيميل أو كلمة السر غلط';
+  }
+};
+
+// Logout
+window.logoutUser = async function() {
+  await signOut(auth);
+  showNotification('تم تسجيل الخروج', 'info');
+};
+
+// Image handling
+document.getElementById('phoneImages').addEventListener('change', function(e) {
+  const files = Array.from(e.target.files);
+  if (files.length + selectedImages.length > 5) {
+    showNotification('أقصى عدد صور هو 5', 'error');
+    return;
+  }
+  files.forEach(file => {
+    if (!['image/jpeg','image/png','image/webp'].includes(file.type)) {
+      showNotification('مسموح بصور JPG/PNG/WEBP بس', 'error');
+      return;
+    }
+    selectedImages.push(file);
+  });
+  renderImagePreviews();
+});
+
+function renderImagePreviews() {
+  const container = document.getElementById('imagePreviews');
+  container.innerHTML = '';
+  selectedImages.forEach((file, i) => {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const div = document.createElement('div');
+      div.className = 'image-preview-item';
+      div.innerHTML = `
+        <img src="${e.target.result}" alt="صورة">
+        <button class="remove-img" onclick="removeImage(${i})">✕</button>
+      `;
+      container.appendChild(div);
+    };
+    reader.readAsDataURL(file);
+  });
+  document.querySelector('.upload-placeholder').style.display = selectedImages.length >= 5 ? 'none' : 'flex';
+}
+
+window.removeImage = function(i) {
+  selectedImages.splice(i, 1);
+  renderImagePreviews();
+};
+
+// Char count
+document.getElementById('phoneDesc').addEventListener('input', function() {
+  document.getElementById('charCount').textContent = `${this.value.length}/100`;
+});
+
+// Forbidden patterns
+function containsForbiddenContent(text) {
+  const patterns = [
+    /\d{4,}/,
+    /[٠-٩]{4,}/,
+    /(\d[\s\-*.$#@!_|/\\+]{1,3}){3,}/,
+    /([٠-٩][\s\-*.$#@!_|/\\+]{1,3}){3,}/,
+    /زيرو|صفر|واحد.*اتنين|اتنين.*تلاتة/i,
+    /خمسة.*أربعة|أربعة.*تلاتة|عشرة|احد عشر|اتناشر/i,
+    /واتس|واتساب|تليفون|تلفون|موبايل.*رقم|رقم.*موبايل/i,
+    /شارع|بيت|عنوان|محل|دكان/i,
+    /تواصل|كلمني|اتصل|ابعتلي/i
+  ];
+  return patterns.some(p => p.test(text));
+}
+
+// Upload to Cloudinary
+async function uploadToCloudinary(file) {
+  const formData = new FormData();
+  formData.append('file', file);
+  formData.append('upload_preset', CLOUDINARY_UPLOAD_PRESET);
+  formData.append('cloud_name', CLOUDINARY_CLOUD);
+
+  const res = await fetch(`https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD}/image/upload`, {
+    method: 'POST',
+    body: formData
+  });
+  const data = await res.json();
+  return data.secure_url;
+}
+
+// Submit listing
+window.submitListing = async function() {
+  if (!currentUser) {
+    openModal('registerModal');
+    closeModal('addListingModal');
+    showNotification('لازم تسجل دخول الأول', 'error');
+    return;
+  }
+
+  const name = document.getElementById('phoneName').value.trim();
+  const brand = document.getElementById('phoneBrand').value;
+  const condition = document.getElementById('phoneCondition').value;
+  const price = document.getElementById('phonePrice').value;
+  const area = document.getElementById('phoneArea').value;
+  const desc = document.getElementById('phoneDesc').value.trim();
+  const errEl = document.getElementById('listingError');
+  errEl.textContent = '';
+
+  if (!name || !brand || !price || !area) {
+    errEl.textContent = 'من فضلك املأ كل الحقول المطلوبة';
+    return;
+  }
+  if (containsForbiddenContent(name) || containsForbiddenContent(desc)) {
+    errEl.textContent = 'ممنوع كتابة أرقام تليفونات أو معلومات تواصل في الإعلان';
+    return;
+  }
+  if (selectedImages.length === 0) {
+    errEl.textContent = 'لازم ترفع صورة واحدة على الأقل';
+    return;
+  }
+
+  const btn = document.querySelector('#addListingModal .btn-primary.full');
+  btn.textContent = 'جاري الرفع...';
+  btn.disabled = true;
+
+  try {
+    // Upload images to Cloudinary
+    const imageUrls = [];
+    for (const img of selectedImages) {
+      const url = await uploadToCloudinary(img);
+      imageUrls.push(url);
+    }
+
+    // Random delay 5-15 min in milliseconds (stored as reviewTime)
+    const reviewDelay = Math.floor(Math.random() * (15 - 5 + 1) + 5) * 60 * 1000;
+    const publishAt = new Date(Date.now() + reviewDelay);
+
+    await addDoc(collection(db, 'listings'), {
+      name, brand, condition,
+      price: parseInt(price),
+      area, desc,
+      images: imageUrls,
+      sellerUid: currentUser.uid,
+      sellerName: currentUser.displayName,
+      status: 'pending',
+      publishAt: publishAt.toISOString(),
+      createdAt: serverTimestamp()
+    });
+
+    closeModal('addListingModal');
+    showNotification('✅ تم رفع إعلانك! هيظهر خلال 5-15 دقيقة بعد المراجعة', 'success');
+    resetListingForm();
+    setTimeout(() => loadListings(), 2000);
+  } catch (e) {
+    errEl.textContent = 'حصل خطأ أثناء الرفع، حاول تاني';
+    console.error(e);
+  } finally {
+    btn.textContent = 'نزّل الإعلان 🚀';
+    btn.disabled = false;
+  }
+};
+
+function resetListingForm() {
+  document.getElementById('phoneName').value = '';
+  document.getElementById('phoneBrand').value = '';
+  document.getElementById('phonePrice').value = '';
+  document.getElementById('phoneArea').value = '';
+  document.getElementById('phoneDesc').value = '';
+  document.getElementById('charCount').textContent = '0/100';
+  selectedImages = [];
+  document.getElementById('imagePreviews').innerHTML = '';
+  document.querySelector('.upload-placeholder').style.display = 'flex';
+}
+
+// Load listings
+async function loadListings() {
+  const grid = document.getElementById('listingsGrid');
+  grid.innerHTML = '<div class="loading-spinner"><div class="spinner"></div><p>جاري التحميل...</p></div>';
+
+  try {
+    const q = query(collection(db, 'listings'), orderBy('createdAt', 'desc'));
+    const snap = await getDocs(q);
+    allListings = [];
+
+    const now = new Date();
+    snap.forEach(doc => {
+      const data = { id: doc.id, ...doc.data() };
+      // Show if approved or if publishAt has passed
+      if (data.status === 'approved' || 
+          (data.status === 'pending' && data.publishAt && new Date(data.publishAt) <= now)) {
+        allListings.push(data);
+      }
+    });
+
+    renderListings(allListings);
+    updateStats();
+  } catch (e) {
+    grid.innerHTML = '<p class="error-text">حصل خطأ في التحميل</p>';
+  }
+}
+
+function renderListings(listings) {
+  const grid = document.getElementById('listingsGrid');
+  
+  const search = document.getElementById('searchInput').value.toLowerCase();
+  const brand = document.getElementById('brandFilter').value;
+  const priceRange = document.getElementById('priceFilter').value;
+  const condition = document.getElementById('conditionFilter').value;
+
+  let filtered = listings.filter(l => {
+    if (search && !l.name.toLowerCase().includes(search) && !l.desc.toLowerCase().includes(search)) return false;
+    if (brand && l.brand !== brand) return false;
+    if (condition && l.condition !== condition) return false;
+    if (priceRange) {
+      const [min, max] = priceRange.split('-').map(Number);
+      if (l.price < min || l.price > max) return false;
+    }
+    return true;
+  });
+
+  if (filtered.length === 0) {
+    grid.innerHTML = '<div class="no-results"><p>😕 مفيش إعلانات دلوقتي</p><p class="hint">كن أول واحد ينزل إعلان!</p></div>';
+    return;
+  }
+
+  grid.innerHTML = filtered.map(l => `
+    <div class="listing-card" onclick="viewListing('${l.id}')">
+      <div class="listing-img">
+        <img src="${l.images[0]}" alt="${l.name}" loading="lazy">
+        <span class="condition-badge ${l.condition}">${l.condition}</span>
+      </div>
+      <div class="listing-info">
+        <h3 class="listing-name">${l.name}</h3>
+        <p class="listing-area">📍 ${l.area}</p>
+        <p class="listing-desc">${l.desc}</p>
+        <div class="listing-footer">
+          <span class="listing-price">${l.price.toLocaleString()} ج</span>
+          <button class="btn-see-phone" onclick="event.stopPropagation(); openModal('showPhoneModal')">
+            📞 شوف الرقم - 10ج
+          </button>
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+
+// View listing
+window.viewListing = async function(id) {
+  const listing = allListings.find(l => l.id === id);
+  if (!listing) return;
+
+  const content = document.getElementById('viewListingContent');
+  content.innerHTML = `
+    <button class="modal-close" onclick="closeModal('viewListingModal')">✕</button>
+    <div class="listing-detail">
+      <div class="listing-images-slider">
+        ${listing.images.map((img, i) => `<img src="${img}" class="slide-img ${i===0?'active':''}" onclick="showImg(this)">`).join('')}
+      </div>
+      <h2 class="detail-name">${listing.name}</h2>
+      <div class="detail-badges">
+        <span class="condition-badge ${listing.condition}">${listing.condition}</span>
+        <span class="area-badge">📍 ${listing.area}</span>
+        <span class="brand-badge">📱 ${listing.brand}</span>
+      </div>
+      <p class="detail-desc">${listing.desc}</p>
+      <div class="detail-footer">
+        <span class="detail-price">${listing.price.toLocaleString()} جنيه</span>
+        <button class="btn-primary" onclick="openModal('showPhoneModal')">📞 شوف رقم البايع - 10ج</button>
+      </div>
+      <p class="seller-name">البايع: ${listing.sellerName}</p>
+    </div>
+  `;
+  openModal('viewListingModal');
+};
+
+// Filters
+['searchInput','brandFilter','priceFilter','conditionFilter'].forEach(id => {
+  document.getElementById(id).addEventListener('input', () => renderListings(allListings));
+  document.getElementById(id).addEventListener('change', () => renderListings(allListings));
+});
+
+// Stats
+async function updateStats() {
+  try {
+    const listSnap = await getDocs(collection(db, 'listings'));
+    const userSnap = await getDocs(collection(db, 'users'));
+    animateNum('totalAds', listSnap.size);
+    animateNum('totalUsers', userSnap.size);
+  } catch(e) {}
+}
+
+function animateNum(id, target) {
+  const el = document.getElementById(id);
+  let current = 0;
+  const step = Math.ceil(target / 30);
+  const interval = setInterval(() => {
+    current = Math.min(current + step, target);
+    el.textContent = current;
+    if (current >= target) clearInterval(interval);
+  }, 50);
+}
+
+// Add listing btn
+document.getElementById('addListingBtn').onclick = function(e) {
+  e.preventDefault();
+  if (!currentUser) {
+    openModal('registerModal');
+  } else {
+    openModal('addListingModal');
+  }
+};
+
+// Init
+loadListings();
+setInterval(loadListings, 60000); // refresh every minute
+
+</script>
+<script src="app.js"></script>
+</body>
+</html>
