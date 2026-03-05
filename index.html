@@ -215,6 +215,11 @@
       <span class="char-count" id="charCount">0/100</span>
     </div>
     <div class="form-group">
+      <label>رقم موبايلك 🔒 <span class="hint">(مخفي - هيتبعت للمشتري بس بعد الدفع)</span></label>
+      <input type="tel" id="sellerPhone" placeholder="مثال: 01012345678" class="form-input" maxlength="11">
+      <div style="font-size:12px;color:#f97316;margin-top:4px;">🔒 الرقم مش هيظهر لأي حد غير اللي بيدفع 10ج</div>
+    </div>
+    <div class="form-group">
       <label>صور الموبايل <span class="hint">(أقصى 5 صور)</span></label>
       <div class="image-upload-area" id="imageUploadArea">
         <input type="file" id="phoneImages" accept="image/jpeg,image/png,image/webp" multiple class="file-input">
@@ -466,11 +471,16 @@ window.submitListing = async function() {
   const price = document.getElementById('phonePrice').value;
   const area = document.getElementById('phoneArea').value;
   const desc = document.getElementById('phoneDesc').value.trim();
+  const sellerPhone = document.getElementById('sellerPhone').value.trim();
   const errEl = document.getElementById('listingError');
   errEl.textContent = '';
 
-  if (!name || !brand || !price || !area) {
+  if (!name || !brand || !price || !area || !sellerPhone) {
     errEl.textContent = 'من فضلك املأ كل الحقول المطلوبة';
+    return;
+  }
+  if (!/^(010|011|012|015)\d{8}$/.test(sellerPhone)) {
+    errEl.textContent = 'رقم الموبايل لازم يبدأ بـ 010 أو 011 أو 012 أو 015 ويكون 11 رقم';
     return;
   }
   if (containsForbiddenContent(name) || containsForbiddenContent(desc)) {
@@ -502,6 +512,7 @@ window.submitListing = async function() {
       name, brand, condition,
       price: parseInt(price),
       area, desc,
+      sellerPhone,
       images: imageUrls,
       sellerUid: currentUser.uid,
       sellerName: currentUser.displayName,
@@ -529,6 +540,7 @@ function resetListingForm() {
   document.getElementById('phonePrice').value = '';
   document.getElementById('phoneArea').value = '';
   document.getElementById('phoneDesc').value = '';
+  document.getElementById('sellerPhone').value = '';
   document.getElementById('charCount').textContent = '0/100';
   selectedImages = [];
   document.getElementById('imagePreviews').innerHTML = '';
@@ -680,4 +692,4 @@ setInterval(loadListings, 60000); // refresh every minute
 </script>
 <script src="app.js"></script>
 </body>
-</html>
+                                                                          </html>
