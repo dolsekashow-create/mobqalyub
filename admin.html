@@ -350,7 +350,7 @@ async function loadListings(status) {
           </div>
           <div class="card-meta">
             💰 ${l.price?.toLocaleString()} ج &nbsp;|&nbsp; 📍 ${l.area} &nbsp;|&nbsp; 📱 ${l.brand} &nbsp;|&nbsp; 🏷️ ${l.condition}
-            <br>👤 ${l.sellerName || 'غير معروف'}
+            <br>👤 ${l.sellerName || 'غير معروف'} &nbsp;|&nbsp; 📞 <strong style="color:#10b981">${l.sellerPhone || 'لم يكتب رقم'}</strong>
           </div>
           <div class="card-desc">${l.desc || '-'}</div>
           <div class="card-actions">
